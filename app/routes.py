@@ -6,9 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 from hashlib import sha256
 from uuid import uuid4
 import os
-import jwt
+import jwt	
 import json
 from datetime import datetime, timedelta
+from app import app
 
 def setup_db(app):
 	POSTGRES_URL = os.environ['POSTGRES_URL']
@@ -36,8 +37,9 @@ def run_query(db, sql_text):
 
 
 def build_flask_app():
-	app = Flask(__name__)
-	CORS(app)
+	# app = Flask(__name__)
+	# CORS(app)
+	print("this gets run")
 	
 	# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 	app.secret_key = os.environ['durr']
@@ -52,9 +54,9 @@ def build_flask_app():
 	conn.execute("CREATE TABLE IF NOT EXISTS surveys(id serial PRIMARY KEY, link_id TEXT UNIQUE NOT NULL, content JSON NOT NULL,"
 		" user_id INTEGER NOT NULL, created_dt TIMESTAMP DEFAULT NOW());")
 
-	return app, conn
+	return conn
 
-app, db = build_flask_app()
+db = build_flask_app()
 
 
 @app.route('/getSurveyInfo', methods=('GET',))
